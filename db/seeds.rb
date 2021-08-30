@@ -8,8 +8,13 @@
 
 require 'faker'
 
+10.times do
+  User.create(email: Faker::Internet.email, password: Faker::Internet.password)
+end
+
 30.times do
   Article.create(
+    user: User.all.sample(),
     title: Faker::Tea.variety,
     content: Faker::Lorem.paragraph_by_chars(number: 256)
   )

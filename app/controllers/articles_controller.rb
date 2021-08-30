@@ -1,5 +1,7 @@
 class ArticlesController < ApplicationController
   before_action :set_article, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!, except: [:index]
+  before_action :creator?, only: %i[ edit update destroy ]
 
   # GET /articles or /articles.json
   def index
@@ -22,6 +24,7 @@ class ArticlesController < ApplicationController
   # POST /articles or /articles.json
   def create
     @article = Article.new(article_params)
+    @article.user = current_user
 
     respond_to do |format|
       if @article.save
@@ -62,8 +65,14 @@ class ArticlesController < ApplicationController
       @article = Article.find(params[:id])
     end
 
+    def creator?
+      unless Article.find(params[:id]).user == current_user
+        redirect_to articles_path, notice: "This is not your article"
+      end
+    end
+
     # Only allow a list of trusted parameters through.
     def article_params
-      params.require(:article).permit(:title, :content)
+      params.require(:article).permit(:title, :content, :user)
     end
 end

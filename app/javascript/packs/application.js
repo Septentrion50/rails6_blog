@@ -9,6 +9,7 @@ import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 import 'jquery'
 import('src/plugins')
+import('src/count_button')
 require('stylesheets/application.scss')
 
 Rails.start()
